@@ -1,3 +1,15 @@
+// Set map height
+function heroHeight() {
+  var winHeight = window.innerHeight;
+  document.querySelector(".map-wrapper").style.height = winHeight + "px";
+}
+
+heroHeight();
+
+window.addEventListener("resize", function () {
+  heroHeight();
+});
+
 // Initialize the Google Map
 function initMap() {
   const map = new google.maps.Map(document.getElementById("map"), {
@@ -47,20 +59,12 @@ function renderMarkers(map, data, infoWindow) {
       infoWindow.setContent(`
         <div class="info">
           <p>${earthquake.properties.title}</p>
-          <a href="#" class="details-link">More details</a>
         </div>
       `);
       infoWindow.open(map, marker);
 
-      // Attach click event listener for 'More details' link
-      google.maps.event.addListener(infoWindow, "domready", () => {
-        document
-          .querySelector(".details-link")
-          .addEventListener("click", (event) => {
-            event.preventDefault();
-            displayEarthquakeDetails(earthquake);
-          });
-      });
+      // Display earthquake details directly in the info panel
+      displayEarthquakeDetails(earthquake);
     });
   });
 }
@@ -81,6 +85,13 @@ function displayEarthquakeDetails(earthquake) {
   infoPanelContent.innerHTML = details;
   infoPanelWrapper.classList.add("display");
 }
+
+// Close info panel
+const infoPanelWrapper = document.getElementById("info-panel-wrapper");
+const closeIcon = document.getElementById("close-icon");
+closeIcon.addEventListener("click", () =>
+  infoPanelWrapper.classList.remove("display")
+);
 
 // Initialize the map
 initMap();
